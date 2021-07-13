@@ -1,0 +1,111 @@
+{% assign section = include.section %}
+{% assign item = include.item %}
+
+{% assign columns = section.grid_cols | default: 'three' %}
+{% assign gap_y = section.grid_gap_vert | default: 'medium' %}
+{% assign is_card = false %}
+{% assign enable_cards_is_not_empty = section.enable_cards | is_not_empty %}
+{% if enable_cards_is_not_empty %}
+	{% assign is_card = true %}
+{% endif %}
+
+{% assign has_text = false %}
+{% if item.title or item.subtitle or item.content or item.actions %}
+	{% assign has_text = true %}
+{% endif %}
+{% assign title_align_x = item.title_align | default: 'left' %}
+{% assign content_align_x = item.content_align | default: 'left' %}
+{% assign actions_align_x = item.actions_align | default: 'left' %}
+{% assign actions_width = item.actions_width | default: 'auto' %}
+
+{% assign has_image = false %}
+{% assign image_is_not_empty = item.image | is_not_empty %}
+{% if image_is_not_empty %}
+	{% assign has_image = true %}
+{% endif %}
+{% assign image_align_x = item.image_align | default: 'left' %}
+{% assign image_width = item.image_width | default: 'fifty' %}
+{% assign image_pos = item.image_position | default: 'top' %}
+{% if has_image == false or has_text == false %}
+	{% assign image_pos = 'top' %}
+{% endif %}
+{% assign image_has_padding = false %}
+{% assign image_has_padding_is_not_empty = item.image_has_padding | is_not_empty %}
+{% if image_has_padding_is_not_empty %}
+	{% assign image_has_padding = true %}
+{% endif %}
+
+{% assign is_horiz = false %}
+{% if image_pos == 'left' or image_pos == 'right' %}
+	{% assign is_horiz = true %}
+{% endif %}
+
+{% assign is_vert = false %}
+{% if image_pos == 'top' or image_pos == 'bottom' %}
+	{% assign is_vert = true %}
+{% endif %}
+
+{% assign is_card_has_padding = false %}
+{% if is_card and image_has_padding %}
+	{% assign is_card_has_padding = true %}
+{% endif %}
+
+{% assign is_card_no_padding = false %}
+{% if is_card and image_has_padding == false %}
+	{% assign is_card_no_padding = true %}
+{% endif %}
+
+{% assign is_card_no_img_no_padding = false %}
+{% if is_card and has_image == false and image_has_padding == false %}
+	{% assign is_card_no_img_no_padding = true %}
+{% endif %}
+
+<div class="cell-12 cell-md-6{% if columns == 'three' or columns == 'four' %} cell-lg-4{% endif %}{% if columns == 'four' %} cell-xl-3{% endif %}{% if gap_y == 'small' %} my-1{% endif %}{% if gap_y != 'small' %} my-2{% endif %}{% if gap_y == 'large' %} my-sm-3{% endif %}">
+	<div class="item{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} card{% endif %}{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} card--highlight{% endif %}{% if is_card and is_horiz %} card--horiz{% endif %}{% if is_card and is_vert %} card--vert{% endif %}{% if is_card_has_padding or is_card_no_img_no_padding %} p-3{% endif %}{% if is_card_has_padding or is_card_no_img_no_padding %} p-sm-4{% endif %}">
+		<div class="{% assign is_horiz_is_not_empty = is_horiz | is_not_empty %}{% if is_horiz_is_not_empty %}grid{% endif %}{% assign is_horiz_is_not_empty = is_horiz | is_not_empty %}{% if is_horiz_is_not_empty %} grid-gap-none{% endif %}{% assign is_vert_is_not_empty = is_vert | is_not_empty %}{% if is_vert_is_not_empty %} flex{% endif %}{% assign is_vert_is_not_empty = is_vert | is_not_empty %}{% if is_vert_is_not_empty %} flex-column{% endif %}">
+			{% assign has_image_is_not_empty = has_image | is_not_empty %}
+			{% if has_image_is_not_empty %}
+			<div class="{% assign is_horiz_is_not_empty = is_horiz | is_not_empty %}{% if is_horiz_is_not_empty %}cell-12{% endif %}{% if is_horiz and image_width == 'twenty-five' %} cell-md-3{% endif %}{% if is_horiz and image_width == 'thirty-three' %} cell-md-4{% endif %}{% if is_horiz and image_width == 'fourty' %} cell-md-5{% endif %}{% if is_horiz and image_width == 'fifty' %} cell-md-6{% endif %}{% if is_horiz and image_width == 'sixty' %} cell-md-7{% endif %}">
+				<div class="item__media{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} card__media{% endif %}{% assign is_card_no_padding_is_not_empty = is_card_no_padding | is_not_empty %}{% if is_card_no_padding_is_not_empty %} card__media--fill{% endif %}{% if is_card and image_pos == 'top' %} card__media--top{% endif %}{% if is_card and image_pos == 'bottom' %} card__media--bottom{% endif %}{% if is_card and image_pos == 'left' %} card__media--left{% endif %}{% if is_card and image_pos == 'right' %} card__media--right{% endif %}{% if image_pos != 'bottom' and has_text and is_card_no_padding == false %} mb-3{% endif %}{% if is_horiz and has_text and is_card_no_padding == false %} mb-md-0{% endif %}{% if image_pos == 'right' and has_text and is_card_no_padding == false %} ml-md-3{% endif %}{% if image_pos == 'left' and has_text and is_card_no_padding == false %} mr-md-3{% endif %}{% if image_pos == 'bottom' and has_text and is_card_no_padding == false %} mt-3{% endif %}">
+					<img src="{{ item.image | relative_url }}" alt="{{ item.image_alt }}" class="{% if image_align_x == 'center' %} mx-auto{% endif %}{% if image_align_x == 'right' %} ml-auto{% endif %}" />
+				</div>
+			</div>
+			{% endif %}
+			{% assign has_text_is_not_empty = has_text | is_not_empty %}
+			{% if has_text_is_not_empty %}
+			<div class="{% assign is_horiz_is_not_empty = is_horiz | is_not_empty %}{% if is_horiz_is_not_empty %}cell-12{% endif %}{% if is_horiz and image_width == 'twenty-five' %} cell-md-9{% endif %}{% if is_horiz and image_width == 'thirty-three' %} cell-md-8{% endif %}{% if is_horiz and image_width == 'fourty' %} cell-md-7{% endif %}{% if is_horiz and image_width == 'fifty' %} cell-md-6{% endif %}{% if is_horiz and image_width == 'sixty' %} cell-md-5{% endif %}{% if has_image and image_pos == 'right' %} order-md-first{% endif %}{% if has_image and image_pos == 'bottom' %} order-first{% endif %}{% if is_card and image_pos == 'bottom' and image_has_padding == false %} mb-auto{% endif %}">
+				<div class="item__body{% if has_image and is_card_no_padding %} p-3{% endif %}{% if has_image and is_card_no_padding %} px-sm-4{% endif %}{% if has_image and is_card_no_padding and image_pos != 'bottom' %} pb-sm-4{% endif %}{% if has_image and is_card_no_padding and image_pos == 'bottom' %} pt-sm-4{% endif %}{% if has_image and is_card_no_padding and is_horiz %} py-md-4{% endif %}{% if has_image and is_card_no_padding and image_pos == 'left' %} pr-md-4{% endif %}{% if has_image and is_card_no_padding and image_pos == 'left' %} pl-md-3{% endif %}{% if has_image and is_card_no_padding and image_pos == 'right' %} pl-md-4{% endif %}{% if has_image and is_card_no_padding and image_pos == 'right' %} pr-md-3{% endif %}">
+					{% assign title_is_not_empty = item.title | is_not_empty %}
+					{% if title_is_not_empty %}
+						{% assign title_is_not_empty = section.title | is_not_empty %}
+						{% if title_is_not_empty %}
+						<h3 class="item__title{% if columns == 'two' %} h3{% endif %}{% if columns == 'three' %} h4{% endif %}{% if columns == 'four' %} h5{% endif %}{% if title_align_x == 'center' %} text-center{% endif %}{% if title_align_x == 'right' %} text-right{% endif %}">{{ item.title }}</h3>
+						{% else %}
+						<h2 class="item__title{% if columns == 'two' %} h3{% endif %}{% if columns == 'three' %} h4{% endif %}{% if columns == 'four' %} h5{% endif %}{% if title_align_x == 'center' %} text-center{% endif %}{% if title_align_x == 'right' %} text-right{% endif %}">{{ item.title }}</h2>
+						{% endif %}
+					{% endif %}
+					{% assign subtitle_is_not_empty = item.subtitle | is_not_empty %}
+					{% if subtitle_is_not_empty %}
+					<p class="item__subtitle{% if title_align_x == 'center' %} text-center{% endif %}{% if title_align_x == 'right' %} text-right{% endif %}">
+						{{ item.subtitle }}
+					</p>
+					{% endif %}
+					{% assign content_is_not_empty = item.content | is_not_empty %}
+					{% if content_is_not_empty %}
+					<div class="item__copy{% if content_align_x == 'center' %} text-center{% endif %}{% if content_align_x == 'right' %} text-right{% endif %}">
+						{{ item.content | markdownify }}
+					</div>
+					{% endif %}
+					{% assign actions_is_not_empty = item.actions | is_not_empty %}
+					{% if actions_is_not_empty %}
+					<div class="item__actions btn-group{% if actions_width == 'full-width' %} btn-group--fill{% endif %}{% if actions_align_x == 'center' %} justify-center{% endif %}{% if actions_align_x == 'right' %} justify-end{% endif %}">
+						
+						{% include section_actions.html actions=item.actions %}
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+</div>

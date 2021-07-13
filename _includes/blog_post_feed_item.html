@@ -1,0 +1,77 @@
+{% assign post = include.post_page %}
+{% assign blog_feed_section = include.blog_feed_section %}
+{% assign columns = blog_feed_section.blog_feed_cols | default: 'three' %}
+
+{% assign is_card = false %}
+{% assign enable_cards_is_not_empty = blog_feed_section.enable_cards | is_not_empty %}
+{% if enable_cards_is_not_empty %}
+	{% assign is_card = true %}
+{% endif %}
+
+{% assign has_image = false %}
+{% assign thumb_image_is_not_empty = post.thumb_image | is_not_empty %}
+{% if thumb_image_is_not_empty %}
+	{% assign has_image = true %}
+{% endif %}
+
+{% assign show_image = false %}
+{% assign show_image_is_not_empty = blog_feed_section.show_image | is_not_empty %}
+{% if show_image_is_not_empty %}
+	{% assign show_image = true %}
+{% endif %}
+
+{% assign no_image = false %}
+{% if has_image == false or show_image == false %}
+	{% assign no_image = true %}
+{% endif %}
+
+{% assign show_categories = false %}
+{% if blog_feed_section.show_categories and post.categories %}
+	{% assign show_categories = true %}
+{% endif %}
+
+<article class="cell-12 cell-md-6 my-2{% if columns == 'three' %} cell-lg-4{% endif %}">
+	<div class="item{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} card{% endif %}{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} card--highlight{% endif %}{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} card--vert{% endif %}">
+		<div class="flex flex-column">
+			{% if has_image and show_image %}
+			<div class="item__media mb-3{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} card__media{% endif %}{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} card__media--fill{% endif %}{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} card__media--top{% endif %}">
+				<a href="{{ post.url | relative_url }}"><img src="{{ post.thumb_image | relative_url }}" alt="{{ post.thumb_image_alt }}" /></a>
+			</div>
+			{% endif %}
+			<div class="item__body{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} px-3{% endif %}{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} pb-3{% endif %}{% if is_card and no_image %} pt-3{% endif %}{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} px-sm-4{% endif %}{% assign is_card_is_not_empty = is_card | is_not_empty %}{% if is_card_is_not_empty %} pb-sm-4{% endif %}{% if is_card and no_image %} pt-4{% endif %}">
+				{% if blog_feed_section.show_date or show_categories %}
+				<div class="item__meta mb-1">
+					{% assign show_categories_is_not_empty = show_categories | is_not_empty %}
+					{% if show_categories_is_not_empty %}
+						
+						{% include blog_post_categories.html categories=post.categories container_class='item__cat' %}
+						{% assign show_date_is_not_empty = blog_feed_section.show_date | is_not_empty %}
+						{% if show_date_is_not_empty %}
+							<span class="item__meta-sep"> &middot; </span>
+						{% endif %}
+					{% endif %}
+					{% assign show_date_is_not_empty = blog_feed_section.show_date | is_not_empty %}
+					{% if show_date_is_not_empty %}
+						<span class="item__date"><time datetime="{{ post.date | date: '%Y-%m-%d %H:%M' }}">{{ post.date | date: '%B %d, %Y' }}</time></span>
+					{% endif %}
+				</div>
+				{% endif %}
+				{% assign title_is_not_empty = blog_feed_section.title | is_not_empty %}
+				{% if title_is_not_empty %}
+					<h3 class="item__title mt-0{% if columns == 'two' %} h3{% endif %}{% if columns == 'three' %} h4{% endif %}"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
+				{% else %}
+					<h2 class="item__title mt-0{% if columns == 'two' %} h3{% endif %}{% if columns == 'three' %} h4{% endif %}"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+				{% endif %}
+				{% if blog_feed_section.show_excerpt and post.excerpt %}
+				<div class="item__copy">
+					<p>{{ post.excerpt }}</p>
+				</div>
+				{% endif %}
+				{% if blog_feed_section.show_author and post.author %}
+					
+					{% include blog_post_author.html author=post.author container_class='item__byline' avatar_size='small' %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</article>

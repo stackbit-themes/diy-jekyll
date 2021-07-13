@@ -1,0 +1,24 @@
+title: Stackbit DIY Theme
+baseurl: /
+permalink: '/:title/'
+plugins:
+  - jekyll-menus
+collections:
+  posts:
+    permalink: '/posts/:title/'
+sass:
+  indentWidth: 4
+  style: expanded
+  precision: 10
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - LICENSE.md
+  - README.md
+  - netlify.toml
+  - stackbit-build.sh

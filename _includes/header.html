@@ -1,0 +1,43 @@
+<header class="site-header py-2">
+	<div class="container">
+		<nav class="navbar flex items-center" aria-label="Main Navigation">
+			<a class="sr-only" href="#content">Skip to main content</a>
+			<div class="navbar__branding mr-2">
+				{% assign logo_is_not_empty = site.data.config.header.logo | is_not_empty %}
+				{% if logo_is_not_empty %}
+				<a class="navbar__logo m-0" href="{{ '/' | relative_url }}"><img src="{{ site.data.config.header.logo | relative_url }}" alt="{{ site.data.config.header.logo_alt }}" /></a>
+				{% else %}
+				<a class="navbar__title h4 m-0" href='{{ '/' | relative_url }}'>{{ site.data.config.header.title }}</a>
+				{% endif %}
+			</div>
+			{% if site.data.config.header.has_primary_nav or site.data.config.header.has_secondary_nav %}
+			<div class="navbar__container flex-md-auto">
+				<div class="navbar__scroller">
+					<div class="navbar__inner">
+						<button aria-label="Close" class="btn btn--icon btn--clear navbar__close-btn js-nav-toggle">
+							
+							{% include icon.html icon='close' %}
+							<span class="sr-only">Close</span>
+						</button>
+						<div class="navbar__menu flex-md">
+							{% if site.data.config.header.has_primary_nav and site.data.config.header.primary_nav_links %}
+								
+								{% include header_menu.html header_menu=site.data.config.header.primary_nav_links page=page %}
+							{% endif %}
+							{% if site.data.config.header.has_secondary_nav and site.data.config.header.secondary_nav_links %}
+								
+								{% include header_menu.html header_menu=site.data.config.header.secondary_nav_links page=page %}
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+			<button aria-label="Menu" class="btn btn--icon btn--clear navbar__menu-btn js-nav-toggle ml-auto">
+				
+				{% include icon.html icon='menu' %}
+				<span class="sr-only">Menu</span>
+			</button>
+			{% endif %}
+		</nav>
+	</div>
+</header>

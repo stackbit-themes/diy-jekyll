@@ -1,0 +1,111 @@
+{% assign section = include.section %}
+
+{% assign padding_top = section.padding_top | default: 'medium' %}
+{% assign padding_bottom = section.padding_bottom | default: 'medium' %}
+
+{% assign bg_color = section.background_color | default: 'none' %}
+{% assign bg_img_opacity_pct = section.background_image_opacity | default: 100 %}
+{% assign bg_img_opacity = bg_img_opacity_pct | times: 0.01 %}
+{% assign bg_img_size = section.background_image_size | default: 'cover' %}
+{% assign bg_img_position = section.background_image_position | default: 'center center' %}
+{% assign bg_img_repeat = section.background_image_repeat | default: 'no-repeat' %}
+
+{% assign align_y = section.align_vert | default: 'top' %}
+{% assign title_align_x = section.title_align | default: 'left' %}
+{% assign content_align_x = section.content_align | default: 'left' %}
+
+{% assign has_text = false %}
+{% assign content_is_not_empty = section.content | is_not_empty %}
+{% if content_is_not_empty %}
+	{% assign has_text = true %}
+{% endif %}
+
+{% assign form_layout = section.form_layout | default: 'stacked' %}
+{% assign form_width = section.form_width | default: 'fifty' %}
+{% assign form_pos = section.form_position | default: 'bottom' %}
+{% if has_text == false %}
+	{% assign form_pos = 'bottom' %}
+{% endif %}
+
+{% assign form_is_card = false %}
+{% assign enable_card_is_not_empty = section.enable_card | is_not_empty %}
+{% if enable_card_is_not_empty %}
+	{% assign form_is_card = true %}
+{% endif %}
+
+{% assign is_horiz = false %}
+{% if form_pos == 'left' or form_pos == 'right' %}
+	{% assign is_horiz = true %}
+{% endif %}
+
+{% assign is_vert = false %}
+{% if form_pos == 'top' or form_pos == 'bottom' %}
+	{% assign is_vert = true %}
+{% endif %}
+
+{% assign form_field_count = 0 %}
+{% assign form_fields_is_not_empty = section.form_fields | is_not_empty %}
+{% if form_fields_is_not_empty %}
+	{% assign form_field_count = section.form_fields | size %}
+{% endif %}
+
+{% assign form_is_inline = false %}
+{% if form_field_count < 2 and form_layout == 'inline' %}
+	{% assign form_is_inline = true %}
+{% endif %}
+
+<section class="section{% assign has_border_is_not_empty = section.has_border | is_not_empty %}{% if has_border_is_not_empty %} has-border{% endif %}{% assign background_image_is_not_empty = section.background_image | is_not_empty %}{% if background_image_is_not_empty %} has-cover{% endif %}{% if bg_color == 'none' %} bg-none{% endif %}{% if bg_color == 'primary' %} bg-primary{% endif %}{% if bg_color == 'secondary' %} bg-secondary{% endif %}{% if padding_top == 'small' %} pt-4{% endif %}{% if padding_top == 'medium' or padding_top == 'large' %} pt-6{% endif %}{% if padding_top == 'large' %} pt-md-7{% endif %}{% if padding_bottom == 'small' %} pb-4{% endif %}{% if padding_bottom == 'medium' or padding_bottom == 'large' %} pb-6{% endif %}{% if padding_bottom == 'large' %} pb-md-7{% endif %}">
+
+	{% assign background_image_is_not_empty = section.background_image | is_not_empty %}
+	{% if background_image_is_not_empty %}
+	<div class="cover-img" style="background-image: url('{{ section.background_image | relative_url }}'); opacity: {{ bg_img_opacity }}; background-size: {{ bg_img_size }}; background-repeat: {{ bg_img_repeat }}; background-position: {{ bg_img_position }}"></div>
+	{% endif %}
+
+	{% if section.title or section.subtitle %}
+	<div class="container container--medium mb-3{% if title_align_x == 'center' %} text-center{% endif %}{% if title_align_x == 'right' %} text-right{% endif %}">
+		{% assign subtitle_is_not_empty = section.subtitle | is_not_empty %}
+		{% if subtitle_is_not_empty %}
+		<div class="section__subtitle">{{ section.subtitle }}</div>
+		{% endif %}
+		{% assign title_is_not_empty = section.title | is_not_empty %}
+		{% if title_is_not_empty %}
+		<h2 class="section__title mt-0">{{ section.title }}</h2>
+		{% endif %}
+	</div>
+	{% endif %}
+
+	<div class="container{% assign is_vert_is_not_empty = is_vert | is_not_empty %}{% if is_vert_is_not_empty %} container--medium{% endif %}">
+		<div class="section__content grid{% if is_horiz and align_y == 'middle' %} items-center{% endif %}{% if is_horiz and align_y == 'bottom' %} items-end{% endif %}">
+			{% assign has_text_is_not_empty = has_text | is_not_empty %}
+			{% if has_text_is_not_empty %}
+			<div class="section__copy my-2 cell-12{% if is_horiz and form_width == 'fourty' %} cell-md-7{% endif %}{% if is_horiz and form_width == 'fifty' %} cell-md-6{% endif %}{% if is_horiz and form_width == 'sixty' %} cell-md-5{% endif %}{% if content_align_x == 'center' %} text-center{% endif %}{% if content_align_x == 'right' %} text-right{% endif %}">
+				{{ section.content | markdownify }}
+			</div>
+			{% endif %}
+			<div class="section__form my-2 cell-12{% if is_horiz and has_text and form_width == 'fourty' %} cell-md-5{% endif %}{% if is_horiz and has_text and form_width == 'fifty' %} cell-md-6{% endif %}{% if is_horiz and has_text and form_width == 'sixty' %} cell-md-7{% endif %}{% if form_pos == 'top' or form_pos == 'left' %} order-first{% endif %}">
+				<form name="{{ section.form_id }}" id="{{ section.form_id }}"{% assign form_action_is_not_empty = section.form_action | is_not_empty %}{% if form_action_is_not_empty %} action="{{ section.form_action }}"{% endif %} method="POST" data-netlify="true" data-netlify-honeypot="{{ section.form_id }}-bot-field" class="{% assign form_is_inline_is_not_empty = form_is_inline | is_not_empty %}{% if form_is_inline_is_not_empty %}form-inline{% endif %}{% assign form_is_card_is_not_empty = form_is_card | is_not_empty %}{% if form_is_card_is_not_empty %} card{% endif %}{% assign form_is_card_is_not_empty = form_is_card | is_not_empty %}{% if form_is_card_is_not_empty %} p-4{% endif %}{% assign form_is_card_is_not_empty = form_is_card | is_not_empty %}{% if form_is_card_is_not_empty %} p-sm-5{% endif %}">
+					<div class="sr-only">
+						<label id="{{ section.form_id }}-honeypot-label" for="{{ section.form_id }}-honeypot">Don't fill this out if you're human:</label>
+						<input aria-labelledby="{{ section.form_id }}-honeypot-label" id="{{ section.form_id }}-honeypot" name="{{ section.form_id }}-bot-field" />
+					</div>
+					<input aria-labelledby="{{ section.form_id }}-honeypot-label" type="hidden" name="form-name" value="{{ section.form_id }}" />
+					<div class="form-content{% assign form_is_inline_is_not_empty = form_is_inline | is_not_empty %}{% if form_is_inline_is_not_empty %} flex{% endif %}{% assign form_is_inline_is_not_empty = form_is_inline | is_not_empty %}{% if form_is_inline_is_not_empty %} flex-column{% endif %}{% assign form_is_inline_is_not_empty = form_is_inline | is_not_empty %}{% if form_is_inline_is_not_empty %} flex-xs-row{% endif %}">
+						{% assign form_fields_is_not_empty = section.form_fields | is_not_empty %}
+						{% if form_fields_is_not_empty %}
+							{% for field in section.form_fields %}
+							<div class="form-group{% if form_is_inline == false %} mb-2{% endif %}{% if form_is_inline == true %} mb-1{% endif %}{% if form_is_inline == true %} mb-xs-0{% endif %}{% assign form_is_inline_is_not_empty = form_is_inline | is_not_empty %}{% if form_is_inline_is_not_empty %} flex-auto{% endif %}">
+								
+								{% include form_field.html field=field %}
+							</div>
+							{% endfor %}
+						{% endif %}
+
+						<div class="form-submit{% if form_is_inline == false %} mt-3{% endif %}{% if form_is_inline == true %} mx-auto{% endif %}{% if form_is_inline == true %} mr-xs-0{% endif %}{% if form_is_inline == true %} ml-xs-1{% endif %}">
+							<button type="submit" class="btn btn--primary">{{ section.submit_label }}</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>

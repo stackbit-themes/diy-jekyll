@@ -1,0 +1,100 @@
+{% assign has_logo = false %}
+{% assign logo_is_not_empty = site.data.config.footer.logo | is_not_empty %}
+{% if logo_is_not_empty %}
+	{% assign has_logo = true %}
+{% endif %}
+{% assign footer_content = false %}
+{% if site.data.config.footer.content or site.data.config.footer.links %}
+	{% assign footer_content = true %}
+{% endif %}
+{% assign footer_social = false %}
+{% if site.data.config.footer.has_social and site.data.config.footer.social_links %}
+	{% assign footer_social = true %}
+{% endif %}
+
+<footer class="site-footer">
+	{% if has_logo or site.data.config.footer.has_primary_nav or site.data.config.footer.has_secondary_nav or site.data.config.footer.has_tertiary_nav %}
+	<div class="site-footer__nav py-5 py-md-6">
+		<div class="container">
+			<div class="grid{% if has_logo == false %} justify-md-center{% endif %}">
+				{% assign has_logo_is_not_empty = has_logo | is_not_empty %}
+				{% if has_logo_is_not_empty %}
+				<a class="site-footer__logo cell-12 cell-md-5 my-4" href="{{ '/' | relative_url }}">
+					<img src="{{ site.data.config.footer.logo | relative_url }}" alt="{{ site.data.config.header.logo_alt }}" />
+				</a>
+				{% endif %}
+				{% if site.data.config.footer.has_primary_nav and site.data.config.footer.primary_nav_links %}
+				<div class="site-footer__menu cell-12 cell-md my-3 my-md-4">
+					{% assign primary_nav_title_is_not_empty = site.data.config.footer.primary_nav_title | is_not_empty %}
+					{% if primary_nav_title_is_not_empty %}
+					<h2 class="h4 mb-3 mb-md-4">{{ site.data.config.footer.primary_nav_title }}</h2>
+					{% endif %}
+					
+					{% include footer_menu.html footer_menu=site.data.config.footer.primary_nav_links %}
+				</div>
+				{% endif %}
+				{% if site.data.config.footer.has_secondary_nav and site.data.config.footer.secondary_nav_links %}
+				<div class="site-footer__menu cell-12 cell-md my-3 my-md-4">
+					{% assign secondary_nav_title_is_not_empty = site.data.config.footer.secondary_nav_title | is_not_empty %}
+					{% if secondary_nav_title_is_not_empty %}
+					<h2 class="h4 mb-3 mb-md-4">{{ site.data.config.footer.secondary_nav_title }}</h2>
+					{% endif %}
+					
+					{% include footer_menu.html footer_menu=site.data.config.footer.secondary_nav_links %}
+				</div>
+				{% endif %}
+				{% if site.data.config.footer.has_tertiary_nav and site.data.config.footer.tertiary_nav_links %}
+				<div class="site-footer__menu cell-12 cell-md my-3 my-md-4">
+					{% assign tertiary_nav_title_is_not_empty = site.data.config.footer.tertiary_nav_title | is_not_empty %}
+					{% if tertiary_nav_title_is_not_empty %}
+					<h2 class="h4 mb-3 mb-md-4">{{ site.data.config.footer.tertiary_nav_title }}</h2>
+					{% endif %}
+					
+					{% include footer_menu.html footer_menu=site.data.config.footer.tertiary_nav_links %}
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endif %}
+	{% if footer_content or footer_social %}
+	<div class="site-footer__info py-3 py-sm-4">
+		<div class="container">
+			<div class="grid items-center">
+				{% assign footer_content_is_not_empty = footer_content | is_not_empty %}
+				{% if footer_content_is_not_empty %}
+				<div class="site-footer__copyright cell-12{% assign footer_social_is_not_empty = footer_social | is_not_empty %}{% if footer_social_is_not_empty %} cell-sm{% endif %}">
+					{% assign content_is_not_empty = site.data.config.footer.content | is_not_empty %}
+					{% if content_is_not_empty %}
+						<span>{{ site.data.config.footer.content }}</span>
+					{% endif %}
+					{% for link in site.data.config.footer.links %}
+						<a href="{{ link.url | relative_url }}"
+							{% assign new_window_is_not_empty = link.new_window | is_not_empty %}{% if new_window_is_not_empty %} target="_blank"{% endif %}
+							{% if link.new_window or link.no_follow %} rel="{% assign new_window_is_not_empty = link.new_window | is_not_empty %}{% if new_window_is_not_empty %}noopener {% endif %}{% assign no_follow_is_not_empty = link.no_follow | is_not_empty %}{% if no_follow_is_not_empty %}nofollow{% endif %}"{% endif %}>{{ link.label }}</a>
+					{% endfor %}
+				</div>
+				{% endif %}
+				{% assign footer_social_is_not_empty = footer_social | is_not_empty %}
+				{% if footer_social_is_not_empty %}
+				<div class="site-footer__social cell-12{% assign footer_content_is_not_empty = footer_content | is_not_empty %}{% if footer_content_is_not_empty %} cell-sm-auto{% endif %}">
+					{% for link in site.data.config.footer.social_links %}
+						{% assign link_style = link.style | default: 'link' %}
+						{% if link.has_icon and link.icon %}
+						<a href="{{ link.url | relative_url }}"
+							{% assign new_window_is_not_empty = link.new_window | is_not_empty %}{% if new_window_is_not_empty %} target="_blank"{% endif %}
+							{% if link.new_window or link.no_follow %} rel="{% assign new_window_is_not_empty = link.new_window | is_not_empty %}{% if new_window_is_not_empty %}noopener {% endif %}{% assign no_follow_is_not_empty = link.no_follow | is_not_empty %}{% if no_follow_is_not_empty %}nofollow{% endif %}"{% endif %}
+							class="btn btn--icon{% if link_style == 'primary' %} btn--primary{% endif %}{% if link_style == 'secondary' %} btn--secondary{% endif %}{% if link_style == 'link' %} btn--clear{% endif %}">
+							
+							{% include icon.html icon=link.icon %}
+							<span class="sr-only">{{ link.label }}</span>
+						</a>
+						{% endif %}
+					{% endfor %}
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% endif %}
+</footer>

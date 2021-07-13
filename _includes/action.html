@@ -1,0 +1,16 @@
+{% assign action = include.action %}
+{% assign action_style = action.style | default: 'link' %}
+{% assign action_icon_pos = action.icon_position | default: 'right' %}
+<a href="{{ action.url | relative_url }}"
+	{% assign new_window_is_not_empty = action.new_window | is_not_empty %}{% if new_window_is_not_empty %} target="_blank"{% endif %}
+	{% if action.new_window or action.no_follow %} rel="{% assign new_window_is_not_empty = action.new_window | is_not_empty %}{% if new_window_is_not_empty %}noopener {% endif %}{% assign no_follow_is_not_empty = action.no_follow | is_not_empty %}{% if no_follow_is_not_empty %}nofollow{% endif %}"{% endif %}
+	class="{% if action_style == 'primary' or action_style == 'secondary' or action.has_icon %}btn{% endif %}{% if action_style == 'primary' %} btn--primary{% endif %}{% if action_style == 'secondary' %} btn--secondary{% endif %}{% if action.has_icon and action_icon_pos == 'center' %} btn--icon{% endif %}{% if action.has_icon and action_style == 'link' %} btn--clear{% endif %}">
+	{% assign has_icon_is_not_empty = action.has_icon | is_not_empty %}
+	{% if has_icon_is_not_empty %}
+		
+		{% include icon.html icon=action.icon %}
+		<span class="{% if action_icon_pos == 'right' %}order-first{% endif %}{% if action_icon_pos == 'center' %} sr-only{% endif %}">{{ action.label }}</span>
+	{% else %}
+		{{ action.label }}
+	{% endif %}
+</a>

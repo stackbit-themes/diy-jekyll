@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    <head>    
+
+        <title>{% assign title_is_not_empty = page.seo.title | is_not_empty %}{% if title_is_not_empty %}{{ page.seo.title }}{% else %}{{ page.title | append: ' | ' | append: site.data.config.title }}{% endif %}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="google" content="notranslate" />
+        <meta name="description" content="{{ page.seo.description | default: '' }}" />
+        {% assign robots_is_not_empty = page.seo.robots | is_not_empty %}
+        {% if robots_is_not_empty %}
+        <meta name="robots" content="{{ page.seo.robots | join: ',' }}">
+        {% endif %}
+        {% for meta in page.seo.extra %}
+          {% assign key_name = meta.keyName | default: 'name' %}
+          {% assign relativeUrl_is_not_empty = meta.relativeUrl | is_not_empty %}
+          {% if relativeUrl_is_not_empty %}
+            {% assign domain_is_not_empty = site.data.config.domain | is_not_empty %}
+            {% if domain_is_not_empty %}
+              {% assign domain = site.data.config.domain | trim: '/' %}
+              {% assign rel_url = meta.value | relative_url %}
+              {% assign full_url = domain | append: rel_url %}
+              <meta {{ key_name }}="{{ meta.name }}" content="{{ full_url }}">
+            {% endif %}
+          {% else %}
+            <meta {{ key_name }}="{{ meta.name }}" content="{{ meta.value }}">
+          {% endif %}
+        {% endfor %}
+        {% assign style = site.data.config.style | default: 'classic' %}
+        {% assign font = site.data.config.base_font | default: 'sans-serif' %}
+        {% if style == 'bold' %}
+          {% if font == 'serif' %}
+          <link href="https://fonts.googleapis.com/css2?family=Arvo:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet"> 
+          {% else %}
+          <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+          {% endif %}
+        {% elsif style == 'classic' %}
+          {% if font == 'serif' %}
+          <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+          {% else %}
+          <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+          {% endif %}
+        {% else %}
+          {% if font == 'serif' %}
+          <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+          {% else %}
+          <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+          {% endif %}
+        {% endif %}
+        <link rel="stylesheet" href="{{ 'css/main.css' | relative_url }}">
+        {% assign favicon_is_not_empty = site.data.config.favicon | is_not_empty %}
+        {% if favicon_is_not_empty %}
+        <link rel="icon" href="{{ site.data.config.favicon | relative_url }}">
+        {% endif %}
+        
+    </head>
+    <body class="layout-{{ site.data.config.layout_type }} style-{{ site.data.config.style }} palette-{{ site.data.config.palette }} mode-{{ site.data.config.mode }} font-{{ site.data.config.base_font }}">
+        
+        {{ content }}
+        <script src="{{ 'js/init.js' | relative_url }}"></script>
+        <script src="{{ 'js/page-load.js' | relative_url }}"></script>
+    </body> 
+</html>

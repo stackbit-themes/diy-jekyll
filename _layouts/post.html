@@ -1,0 +1,59 @@
+---
+layout: body
+---
+
+<article class="post py-5 py-sm-6 py-md-7">
+	{% assign has_image = false %}
+	{% assign image_is_not_empty = page.image | is_not_empty %}
+	{% if image_is_not_empty %}
+		{% assign has_image = true %}
+	{% endif %}
+	{% assign image_pos = page.image_position | default: 'top' %}
+	<div class="post__hero container{% if image_pos == 'top' or has_image == false %} container--medium{% endif %}">
+		<div class="mb-4{% if image_pos != 'top' %} mb-md-5{% endif %}{% if image_pos != 'top' %} mb-md-6{% endif %}{% if image_pos != 'top' %} grid{% endif %}{% if has_image and image_pos != 'top' %} items-center{% endif %}">
+			{% assign has_image_is_not_empty = has_image | is_not_empty %}
+			{% if has_image_is_not_empty %}
+			<div class="post__image mb-3{% if image_pos != 'top' %} cell-12{% endif %}{% if image_pos != 'top' %} cell-lg-7{% endif %}{% if image_pos != 'top' %} mb-lg-0{% endif %}">
+				<img src="{{ page.image | relative_url }}" alt="{{ page.image_alt }}" />
+			</div>
+			{% endif %}
+
+			<header class="post__header{% if image_pos != 'top' %} cell-12{% endif %}{% if image_pos != 'top' %} cell-lg-5{% endif %}{% if has_image and image_pos == 'right' %} order-lg-first{% endif %}">
+				<div class="post__meta mb-2">
+					{% assign categories_is_not_empty = page.categories | is_not_empty %}
+					{% if categories_is_not_empty %}
+						
+						{% include blog_post_categories.html categories=page.categories container_class='post__cat' %}
+						<span class="post__meta-sep"> &middot; </span>
+					{% endif %}
+					<span class="post__date"><time datetime="{{ page.date | date: '%Y-%m-%d %H:%M' }}">{{ page.date | date: '%B %d, %Y' }}</time></span>
+				</div>
+				<h1 class="post__title mt-0">{{ page.title }}</h1>
+				{% assign subtitle_is_not_empty = page.subtitle | is_not_empty %}
+				{% if subtitle_is_not_empty %}
+					<p class="post__subtitle">{{ page.subtitle }}</p>
+				{% endif %}
+				{% assign author_is_not_empty = page.author | is_not_empty %}
+				{% if author_is_not_empty %}
+					
+					{% include blog_post_author.html author=page.author container_class='post__byline' avatar_size='medium' %}
+				{% endif %}
+			</header>
+		</div>
+	</div>
+
+	<div class="container container--medium">
+		<div class="post__body text-block">
+			{{ content }}
+		</div>
+	
+		{% assign tags_is_not_empty = page.tags | is_not_empty %}
+		{% if tags_is_not_empty %}
+		<footer class="post__footer mt-4 mt-md-5">
+			
+			{% include blog_post_tags.html tags=page.tags %}
+		</footer>
+		{% endif %}
+	</div>
+
+</article>

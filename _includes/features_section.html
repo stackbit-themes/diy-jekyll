@@ -1,0 +1,46 @@
+{% assign section = include.section %}
+
+{% assign align_x = section.align | default: 'center' %}
+{% assign padding_top = section.padding_top | default: 'medium' %}
+{% assign padding_bottom = section.padding_bottom | default: 'medium' %}
+
+{% assign bg_color = section.background_color | default: 'none' %}
+{% assign bg_img_opacity_pct = section.background_image_opacity | default: 100 %}
+{% assign bg_img_opacity = bg_img_opacity_pct | times: 0.01 %}
+{% assign bg_img_size = section.background_image_size | default: 'cover' %}
+{% assign bg_img_position = section.background_image_position | default: 'center center' %}
+{% assign bg_img_repeat = section.background_image_repeat | default: 'no-repeat' %}
+
+{% assign feature_padding_y = section.feature_padding_vert | default: 'medium' %}
+
+<section class="section features{% assign has_border_is_not_empty = section.has_border | is_not_empty %}{% if has_border_is_not_empty %} has-border{% endif %}{% assign background_image_is_not_empty = section.background_image | is_not_empty %}{% if background_image_is_not_empty %} has-cover{% endif %}{% if bg_color == 'none' %} bg-none{% endif %}{% if bg_color == 'primary' %} bg-primary{% endif %}{% if bg_color == 'secondary' %} bg-secondary{% endif %}{% if padding_top == 'small' %} pt-4{% endif %}{% if padding_top == 'medium' or padding_top == 'large' %} pt-6{% endif %}{% if padding_top == 'large' %} pt-md-7{% endif %}{% if padding_bottom == 'small' %} pb-4{% endif %}{% if padding_bottom == 'medium' or padding_bottom == 'large' %} pb-6{% endif %}{% if padding_bottom == 'large' %} pb-md-7{% endif %}">
+
+	{% assign background_image_is_not_empty = section.background_image | is_not_empty %}
+	{% if background_image_is_not_empty %}
+	<div class="cover-img" style="background-image: url('{{ section.background_image | relative_url }}'); opacity: {{ bg_img_opacity }}; background-size: {{ bg_img_size }}; background-repeat: {{ bg_img_repeat }}; background-position: {{ bg_img_position }}"></div>
+	{% endif %}
+
+	{% if section.title or section.subtitle %}
+	<div class="container container--medium{% if feature_padding_y == 'small' or feature_padding_y == 'medium' %} mb-5{% endif %}{% if feature_padding_y == 'large' %} mb-4{% endif %}{% if align_x == 'center' %} text-center{% endif %}{% if align_x == 'right' %} text-right{% endif %}">
+		{% assign subtitle_is_not_empty = section.subtitle | is_not_empty %}
+		{% if subtitle_is_not_empty %}
+		<div class="section__subtitle">{{ section.subtitle }}</div>
+		{% endif %}
+		{% assign title_is_not_empty = section.title | is_not_empty %}
+		{% if title_is_not_empty %}
+		<h2 class="section__title mt-0">{{ section.title }}</h2>
+		{% endif %}
+	</div>
+	{% endif %}
+
+	{% assign features_is_not_empty = section.features | is_not_empty %}
+	{% if features_is_not_empty %}
+	<div class="container">
+		{% for feature in section.features %}
+			
+			{% include feature.html section=section feature=feature %}
+		{% endfor %}
+	</div>
+	{% endif %}
+
+</section>

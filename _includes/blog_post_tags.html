@@ -1,0 +1,10 @@
+{% assign tags = include.tags %}
+{% for tag in tags %}
+	{% assign tag_data = tag | get_data %}
+	{% assign link_is_not_empty = tag_data.link | is_not_empty %}
+	{% if link_is_not_empty %}
+		<a class="mr-1" href="{{ tag_data.link | relative_url }}">{{ tag_data.title }}</a>
+	{% else %}
+		<span class="mr-1">{{ tag_data.title }}</span>
+	{% endif %}
+{% endfor %}

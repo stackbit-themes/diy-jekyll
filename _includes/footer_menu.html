@@ -1,0 +1,9 @@
+{% assign menu = include.footer_menu %}
+<ul class="menu">
+{% for menu_item in menu %}
+	<li class="menu__item mb-1">
+		
+		{% include action.html action=menu_item %}
+	</li>
+{% endfor %}
+</ul>

@@ -1,0 +1,77 @@
+{% assign section = include.section %}
+{% assign feature = include.feature %}
+
+{% assign padding_y = section.feature_padding_vert | default: 'medium' %}
+{% assign align_x = feature.align | default: 'left' %}
+
+{% assign has_text = false %}
+{% if feature.title or feature.subtitle or feature.content or feature.actions %}
+	{% assign has_text = true %}
+{% endif %}
+
+{% assign has_media = false %}
+{% if feature.image or feature.video_embed_html %}
+	{% assign has_media = true %}
+{% endif %}
+{% assign media_width = feature.media_width | default: 'fifty' %}
+{% assign media_pos = feature.media_position | default: 'top' %}
+{% if has_media == false or has_text == false %}
+	{% assign media_pos = 'top' %}
+{% endif %}
+
+{% assign is_horiz = false %}
+{% if media_pos == 'left' or media_pos == 'right' %}
+	{% assign is_horiz = true %}
+{% endif %}
+
+{% assign is_vert = false %}
+{% if media_pos == 'top' or media_pos == 'bottom' %}
+	{% assign is_vert = true %}
+{% endif %}
+
+<div class="feature{% assign is_vert_is_not_empty = is_vert | is_not_empty %}{% if is_vert_is_not_empty %} maxw-medium{% endif %}{% assign is_vert_is_not_empty = is_vert | is_not_empty %}{% if is_vert_is_not_empty %} mx-auto{% endif %}{% if padding_y == 'small' %} py-0{% endif %}{% if padding_y != 'small' %} py-1{% endif %}{% if padding_y == 'large' %} py-sm-3{% endif %}">
+	<div class="item__content grid items-center">
+		{% assign has_media_is_not_empty = has_media | is_not_empty %}
+		{% if has_media_is_not_empty %}
+		<div class="feature__media my-2 cell-12{% if is_horiz and has_text and media_width == 'thirty-three' %} cell-md-4{% endif %}{% if is_horiz and has_text and media_width == 'fourty' %} cell-md-5{% endif %}{% if is_horiz and has_text and media_width == 'fifty' %} cell-md-6{% endif %}{% if is_horiz and has_text and media_width == 'sixty' %} cell-md-7{% endif %}">
+			{% assign video_embed_html_is_not_empty = feature.video_embed_html | is_not_empty %}
+			{% if video_embed_html_is_not_empty %}
+				{{ feature.video_embed_html }}
+			{% else %}
+				<img src="{{ feature.image | relative_url }}" alt="{{ feature.image_alt }}" class="{% if align_x == 'center' %}mx-auto{% endif %}{% if align_x == 'right' %} ml-auto{% endif %}" />
+			{% endif %}
+		</div>
+		{% endif %}
+		{% assign has_text_is_not_empty = has_text | is_not_empty %}
+		{% if has_text_is_not_empty %}
+		<div class="feature__body my-2 cell-12{% if is_horiz and has_media and media_width == 'thirty-three' %} cell-md-8{% endif %}{% if is_horiz and has_media and media_width == 'fourty' %} cell-md-7{% endif %}{% if is_horiz and has_media and media_width == 'fifty' %} cell-md-6{% endif %}{% if is_horiz and has_media and media_width == 'sixty' %} cell-md-5{% endif %}{% if has_media and media_pos == 'right' %} order-md-first{% endif %}{% if has_media and media_pos == 'bottom' %} order-first{% endif %}{% if align_x == 'center' %} text-center{% endif %}{% if align_x == 'right' %} text-right{% endif %}">
+			{% assign title_is_not_empty = feature.title | is_not_empty %}
+			{% if title_is_not_empty %}
+				{% assign title_is_not_empty = section.title | is_not_empty %}
+				{% if title_is_not_empty %}
+				<h3 class="feature__title h2">{{ feature.title }}</h3>
+				{% else %}
+				<h2 class="feature__title h2">{{ feature.title }}</h2>
+				{% endif %}
+			{% endif %}
+			{% assign subtitle_is_not_empty = feature.subtitle | is_not_empty %}
+			{% if subtitle_is_not_empty %}
+			<p class="feature__subtitle">{{ feature.subtitle }}</p>
+			{% endif %}
+			{% assign content_is_not_empty = feature.content | is_not_empty %}
+			{% if content_is_not_empty %}
+			<div class="feature__copy">
+				{{ feature.content | markdownify }}
+			</div>
+			{% endif %}
+			{% assign actions_is_not_empty = feature.actions | is_not_empty %}
+			{% if actions_is_not_empty %}
+			<div class="feature__actions btn-group{% if align_x == 'center' %} justify-center{% endif %}{% if align_x == 'right' %} justify-end{% endif %}">
+				
+				{% include section_actions.html actions=feature.actions %}
+			</div>
+			{% endif %}
+		</div>
+		{% endif %}
+	</div>
+</div>

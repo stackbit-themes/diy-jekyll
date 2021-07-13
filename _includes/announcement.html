@@ -1,0 +1,20 @@
+{% assign site = include.site %}
+{% assign align_x = site.data.config.header.anncmnt_align | default: 'left' %}
+{% assign has_close_btn = site.data.config.header.anncmnt_has_close %}
+<div class="announcement-bar py-2{% assign has_close_btn_is_not_empty = has_close_btn | is_not_empty %}{% if has_close_btn_is_not_empty %} js-announcement{% endif %}{% assign has_close_btn_is_not_empty = has_close_btn | is_not_empty %}{% if has_close_btn_is_not_empty %} is-hidden{% endif %}"{% assign has_close_btn_is_not_empty = has_close_btn | is_not_empty %}{% if has_close_btn_is_not_empty %} data-anncmnt-id="{{ site.data.config.header.anncmnt_id }}"{% endif %}>
+	<div class="container">
+		<div class="announcement-bar__content">
+			<div class="announcement-bar__copy{% if align_x == 'center' %} text-center{% endif %}{% if align_x == 'right' %} text-right{% endif %}">
+				{{ site.data.config.header.anncmnt_content | markdownify }}
+			</div>
+			{% assign has_close_btn_is_not_empty = has_close_btn | is_not_empty %}
+			{% if has_close_btn_is_not_empty %}
+			<button aria-label="Close" class="btn btn--icon btn--clear js-announcment-close">
+				
+				{% include icon.html icon='close' %}
+				<span class="sr-only">Close</span>
+			</button>
+			{% endif %}
+		</div>
+	</div>
+</div>

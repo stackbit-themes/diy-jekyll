@@ -1,0 +1,32 @@
+---
+layout: base
+---
+
+<div id="site-wrap" class="site">
+
+	{% if site.data.config.header.has_anncmnt and site.data.config.header.anncmnt_content %}
+		{% assign anncmnt_is_home_only_is_not_empty = site.data.config.header.anncmnt_is_home_only | is_not_empty %}
+		{% if anncmnt_is_home_only_is_not_empty %}
+			{% if page.url == '/' %}
+				
+				{% include announcement.html site=site %}
+			{% endif %}
+		{% else %}
+			
+			{% include announcement.html site=site %}
+		{% endif %}
+	{% endif %}
+
+	{% include header.html %}
+
+	<main id="content" class="site-content">
+		{{ content }}
+	</main>
+
+	{% include footer.html %}
+
+</div>
+
+{% if site.data.config.header.has_primary_nav or site.data.config.header.has_secondary_nav %}
+<div class="nav-overlay js-nav-toggle"></div>
+{% endif %}

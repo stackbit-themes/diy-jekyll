@@ -1,0 +1,85 @@
+{% assign section = include.section %}
+
+{% assign align_x = section.align | default: 'center' %}
+{% assign padding_top = section.padding_top | default: 'medium' %}
+{% assign padding_bottom = section.padding_bottom | default: 'medium' %}
+
+{% assign bg_color = section.background_color | default: 'none' %}
+{% assign bg_img_opacity_pct = section.background_image_opacity | default: 100 %}
+{% assign bg_img_opacity = bg_img_opacity_pct | times: 0.01 %}
+{% assign bg_img_size = section.background_image_size | default: 'cover' %}
+{% assign bg_img_position = section.background_image_position | default: 'center center' %}
+{% assign bg_img_repeat = section.background_image_repeat | default: 'no-repeat' %}
+
+<section class="section blog-feed{% assign has_border_is_not_empty = section.has_border | is_not_empty %}{% if has_border_is_not_empty %} has-border{% endif %}{% assign background_image_is_not_empty = section.background_image | is_not_empty %}{% if background_image_is_not_empty %} has-cover{% endif %}{% if bg_color == 'none' %} bg-none{% endif %}{% if bg_color == 'primary' %} bg-primary{% endif %}{% if bg_color == 'secondary' %} bg-secondary{% endif %}{% if padding_top == 'small' %} pt-4{% endif %}{% if padding_top == 'medium' or padding_top == 'large' %} pt-6{% endif %}{% if padding_top == 'large' %} pt-md-7{% endif %}{% if padding_bottom == 'small' %} pb-4{% endif %}{% if padding_bottom == 'medium' or padding_bottom == 'large' %} pb-6{% endif %}{% if padding_bottom == 'large' %} pb-md-7{% endif %}">
+
+	{% assign background_image_is_not_empty = section.background_image | is_not_empty %}
+	{% if background_image_is_not_empty %}
+	<div class="cover-img" style="background-image: url('{{ section.background_image | relative_url }}'); opacity: {{ bg_img_opacity }}; background-size: {{ bg_img_size }}; background-repeat: {{ bg_img_repeat }}; background-position: {{ bg_img_position }}"></div>
+	{% endif %}
+
+	{% if section.title or section.subtitle %}
+	<div class="container container--medium mb-5{% if align_x == 'center' %} text-center{% endif %}{% if align_x == 'right' %} text-right{% endif %}">
+		{% assign subtitle_is_not_empty = section.subtitle | is_not_empty %}
+		{% if subtitle_is_not_empty %}
+		<div class="section__subtitle">{{ section.subtitle }}</div>
+		{% endif %}
+		{% assign title_is_not_empty = section.title | is_not_empty %}
+		{% if title_is_not_empty %}
+		<h2 class="section__title mt-0">{{ section.title }}</h2>
+		{% endif %}
+	</div>
+	{% endif %}
+	
+	<div class="container">
+		<div class="grid">
+			{% assign section_author = false %}
+			{% assign author_is_not_empty = section.author | is_not_empty %}
+			{% if author_is_not_empty %}
+				{% assign section_author = section.author | get_data %}
+			{% endif %}
+
+			{% assign section_category = false %}
+			{% assign category_is_not_empty = section.category | is_not_empty %}
+			{% if category_is_not_empty %}
+				{% assign section_category = section.category | get_data %}
+			{% endif %}
+
+			{% assign section_tag = false %}
+			{% assign tag_is_not_empty = section.tag | is_not_empty %}
+			{% if tag_is_not_empty %}
+				{% assign section_tag = section.tag | get_data %}
+			{% endif %}
+
+			{% assign posts_all = '/blog' | get_pages %}
+			{% assign posts_sorted = posts_all | sort: 'date' | reverse %}
+
+			{% assign show_recent = section.show_recent | default: false %}
+			{% assign recent_count = section.recent_count | default: 0 %}
+			{% assign post_count = 0 %}
+
+			{% for post in posts_sorted %}
+				{% assign is_post = false %}
+				{% if post.layout == 'post' %}
+					{% assign is_post = true %}
+				{% endif %}
+				{% if is_post and (show_recent == false or post_count < recent_count) %}
+				{% assign post_count = post_count | plus: 1 %}
+				
+				{% include blog_feed_item_filter.html blog_feed_section=section post_page=post section_author=section_author section_category=section_category section_tag=section_tag %}
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+
+	{% assign actions_is_not_empty = section.actions | is_not_empty %}
+	{% if actions_is_not_empty %}
+	<div class="container container--medium mt-4">
+		<div class="section__actions btn-group{% if align_x == 'center' %} justify-center{% endif %}{% if align_x == 'right' %} justify-end{% endif %}">
+			
+			{% include section_actions.html actions=section.actions %}
+		</div>
+	</div>
+	{% endif %}
+
+</section>
